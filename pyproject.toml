@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "ci-failure-analyzer"
+dynamic = ["version", "dependencies", "optional-dependencies"]
+
+description = "Analyze and summarize CI/CD pipeline failures."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+
+authors = [
+    { name = "Your Name", email = "you@example.com" },
+]
+
+keywords = [
+    "ci",
+    "cd",
+    "cicd",
+    "github-actions",
+    "devops",
+    "pipeline",
+    "failure-analysis",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+
+
+[tool.setuptools.dynamic]
+version = { file = ["VERSION"] }
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.dynamic.optional-dependencies]
+dev = { file = ["testing_requirements.txt"] }
+
+
+[project.urls]
+Homepage = "https://github.com/your-org/ci-failure-analyzer"
+Repository = "https://github.com/your-org/ci-failure-analyzer"
+Issues = "https://github.com/your-org/ci-failure-analyzer/issues"
+
+
+[project.scripts]
+ci-failure-analyzer = "ci_failure_analyzer.cli:main"
+
+
+[tool.setuptools]
+include-package-data = true
+packages = ["ci_failure_analyzer", "ci_failure_analyzer.server"]

@@ -1,0 +1,63 @@
+name: Hygiene
+
+on:
+  push:
+    branches:
+      - "*"
+    paths:
+      - "**"
+
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - "**"
+
+jobs:
+  ruff:
+    name: Ruff Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Run linting
+        run: ruff check .
+
+  secret-scan:
+      name: Detect Exposed Credentials
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout full repository history
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+
+        - name: Install Betterleaks
+          run: |
+            curl -L -o betterleaks.tar.gz https://github.com/betterleaks/betterleaks/releases/download/v1.1.1/betterleaks_1.1.1_linux_x64.tar.gz
+            tar -xzf betterleaks.tar.gz
+            chmod +x betterleaks
+            sudo mv betterleaks /usr/local/bin/
+            betterleaks --version
+
+        - name: Run credential scan
+          run: |
+            betterleaks git \
+              --report-format sarif \
+              --report-path betterleaks.sarif \
+              --exit-code 1 \
+              .
